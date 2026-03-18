@@ -20,8 +20,8 @@ A Flask-based user authentication system with Neon PostgreSQL database, deployed
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/kk161205/GLA-B2-FLASK-CLASSWORK.git
-   cd GLA-B2-FLASK-CLASSWORK
+   git clone https://github.com/BhartiSingh005/B2_Fullstack.git
+   cd B2_Fullstack
    ```
 
 2. **Create virtual environment**
@@ -65,6 +65,7 @@ A Flask-based user authentication system with Neon PostgreSQL database, deployed
 B2_Fullstack/
 ├── app/
 │   ├── model/
+│   │   ├── __init__.py
 │   │   └── users.py       # User model and database
 │   ├── static/
 │   │   └── favicon.ico    # Static files
@@ -73,25 +74,27 @@ B2_Fullstack/
 │   │   ├── dashboard.html # User dashboard
 │   │   ├── login.html     # Login page
 │   │   └── register.html  # Registration page
-│   ├── app.py            # Main Flask application
-│   └── form.py           # WTForms definitions
-├── .env                  # Environment variables (not in repo)
-├── .env.example          # Environment template
-├── .gitignore            # Git ignore rules
-├── render.yaml           # Render deployment config
-├── requirements.txt      # Python dependencies
-└── README.md             # This file
+│   ├── __init__.py
+│   ├── app.py             # Main Flask application
+│   └── form.py            # WTForms definitions
+├── .env                   # Environment variables (not in repo)
+├── .env.example           # Environment template
+├── .gitignore             # Git ignore rules
+├── render.yaml            # Render deployment config
+├── requirements.txt       # Python dependencies
+├── wsgi.py                # WSGI entry point for gunicorn
+└── README.md              # This file
 ```
 
 ## Technologies Used
 
 - **Backend**: Flask 3.1.3 (Python web framework)
-- **Database**: Neon PostgreSQL (serverless PostgreSQL) via psycopg2-binary
+- **Database**: Neon PostgreSQL (serverless PostgreSQL) via psycopg[binary]
 - **ORM**: Flask-SQLAlchemy 3.1.1
 - **Authentication**: bcrypt 5.0.0 for password hashing
 - **Forms**: Flask-WTF 1.2.2 with WTForms 3.2.1 validation
 - **Email Validation**: email-validator 2.0.0
-- **Deployment**: Render (gunicorn 21.2.0)
+- **Deployment**: Render (gunicorn 23.0.0)
 - **Environment**: python-dotenv 1.2.2 for configuration
 
 ## User Model
@@ -121,7 +124,7 @@ The application is deployed on Render using `render.yaml` with:
 - **Service name**: `b2-bharti-flask`
 - **Database name**: `b2-bharti-db`
 - **Build Command**: `pip install -r requirements.txt`
-- **Start Command**: `gunicorn app.app:app`
+- **Start Command**: `gunicorn wsgi:app`
 - **Environment Variables**:
   - `SECRET_KEY`: Strong secret key for sessions
   - `DATABASE_URL`: Auto-linked from Render PostgreSQL database
@@ -133,12 +136,12 @@ For local development:
 2. Configure `.env` file with your credentials (`FLASK_ENV=development`)
 3. Run `python app/app.py`
 
-> **Note**: The app runs with `debug=False` in all environments. To enable debug mode locally, set `debug=True` directly in `app.run()`.
+> **Note**: The app uses `wsgi.py` as the gunicorn entry point to avoid package naming conflicts. Debug mode is off in all environments by default.
 
 ### Manual Deployment
 For other platforms:
 1. Set environment variables (`FLASK_ENV=production`)
-2. Use a production WSGI server (gunicorn)
+2. Use a production WSGI server: `gunicorn wsgi:app`
 3. Configure proper database credentials
 4. Set a strong `SECRET_KEY`
 
